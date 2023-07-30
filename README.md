@@ -16,7 +16,7 @@ Demo is available at - https://t.me/propertyhelperbot/
 1. Clone the repo
 2. Update config.env with the following variables:
     - telegram_token: Your telegram bot token
-    - chrome_path: Path to your chrome binary
+    - chrome_path: Path to your chrome binary (if using docker leave unchanged)
 3. Run `docker build -t property-helper .`
-4. Run `docker run --rm --name property-helper property-helper`
+4. Run `sudo docker run --name property-helper --restart unless-stopped -d --env-file config.env property-helper`
 5. Open telegram and search for your bot
