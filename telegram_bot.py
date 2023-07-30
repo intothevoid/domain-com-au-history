@@ -5,9 +5,9 @@
 Simple Telegram Bot to get the price history of an Aussie property from domain.com.au
 """
 
-import logging
-
 from telegram import __version__ as TG_VER
+from logger import LOGGER
+from domain import get_property_history_screenshot
 
 try:
     from telegram import __version_info__
@@ -22,16 +22,6 @@ if __version_info__ < (20, 0, 0, "alpha", 1):
     )
 from telegram import ForceReply, Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
-
-# Enable logging
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
-# set higher logging level for httpx to avoid all GET and POST requests being logged
-logging.getLogger("httpx").setLevel(logging.WARNING)
-
-logger = logging.getLogger(__name__)
-
 
 # Define a few command handlers. These usually take the two arguments update and
 # context.
@@ -52,8 +42,15 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 async def process_property_address(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Get the property address and send the price history screenshot."""
-    await update.message.reply_text(update.message.text)
+    try:
+        await update.message.reply_text("Please wait ~20 seconds while I get the price history screenshot...")
+        screenshot = get_property_history_screenshot(update.message.text)
 
+        # send image file to the user
+        await update.message.reply_photo(photo=open(screenshot, 'rb'))
+    except Exception as e:
+        LOGGER.error(e)
+        await update.message.reply_text("Sorry, I couldn't get the price history for that address. Please try again.")
 
 def start_telegram_bot(bot_token: str) -> None:
     """Start the bot."""
