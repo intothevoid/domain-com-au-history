@@ -1,9 +1,16 @@
 # domain-com-au-history
 A telegram bot which accepts a property address in Australia and returns a screenshot of the property history (if available)
 
+### @propertyhelperbot
+https://t.me/propertyhelperbot/
+
+## Screenshot
+<img src="https://raw.githubusercontent.com/intothevoid/domain-com-au-history/main/sshot.jpeg" width="50%" height="50%"></img>
+
 ## Usage / Demo
 Simply send the bot a property address in Australia and it will return a screenshot of the property history (if available)
-![Demo](https://t.me/propertyhelperbot/)
+
+Demo is available at - https://t.me/propertyhelperbot/
 
 ## How to use and deploy your own custom property helper bot
 1. Clone the repo
