@@ -5,6 +5,7 @@
 Simple Telegram Bot to get the price history of an Aussie property from domain.com.au
 """
 
+import os
 from telegram import __version__ as TG_VER
 from logger import LOGGER
 from domain import get_property_history_screenshot
@@ -44,10 +45,18 @@ async def process_property_address(update: Update, context: ContextTypes.DEFAULT
     """Get the property address and send the price history screenshot."""
     try:
         await update.message.reply_text("Please wait ~20 seconds while I get the price history screenshot...")
-        screenshot = get_property_history_screenshot(update.message.text)
+        screenshot, url = get_property_history_screenshot(update.message.text)
+
+        LOGGER.info(f"Sending price history screenshot for {update.message.text} to {update.effective_user.username}")
 
         # send image file to the user
         await update.message.reply_photo(photo=open(screenshot, 'rb'))
+
+        # send url to the user
+        await update.message.reply_text(url)
+
+        # delete the screenshot file
+        os.remove(screenshot)
     except Exception as e:
         LOGGER.error(e)
         await update.message.reply_text("Sorry, I couldn't get the price history for that address. Please try again.")

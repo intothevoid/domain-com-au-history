@@ -19,6 +19,7 @@ def get_property_history_screenshot(property_address: str):
     chrome_options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(options=chrome_options)
 
+    # open the domain.com.au property profile page
     driver.get(APP_CONFIG['domain_profile_url'])
     time.sleep(generate_sleep_seconds(3,5))
 
@@ -35,6 +36,9 @@ def get_property_history_screenshot(property_address: str):
     # Locate the div element using its class name
     div_element = driver.find_element(By.CLASS_NAME, 'css-ubxrdl')
 
+    # get current url
+    current_url = driver.current_url
+
     # Capture the screenshot of the div element containing the price history
     screenshot_file = f'images/{generate_hash(property_address)}.png'  # Specify the file name to save the screenshot
     div_element.screenshot(screenshot_file)
@@ -43,4 +47,4 @@ def get_property_history_screenshot(property_address: str):
     # quit the driver
     driver.quit()
 
-    return screenshot_file
+    return screenshot_file, current_url
