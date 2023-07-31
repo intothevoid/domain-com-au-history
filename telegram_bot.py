@@ -8,7 +8,7 @@ Simple Telegram Bot to get the price history of an Aussie property from domain.c
 import os
 from telegram import __version__ as TG_VER
 from logger import LOGGER
-from domain import get_property_history_screenshot
+from domain import get_property_history_screenshots, generate_property_pdf_report
 
 try:
     from telegram import __version_info__
@@ -34,7 +34,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         reply_markup=ForceReply(selective=True),
     )
 
-
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /help is issued."""
     await update.message.reply_text("Hi! I am a bot which can get you the price history of an Aussie property if you send me the address.")
@@ -44,19 +43,19 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 async def process_property_address(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Get the property address and send the price history screenshot."""
     try:
-        await update.message.reply_text("Please wait ~20 seconds while I get the price history screenshot...")
-        screenshot, url = get_property_history_screenshot(update.message.text)
+        await update.message.reply_text("Please wait ~30 seconds while I generate a report for you. You will get a notification when ready.")
+        result = get_property_history_screenshots(update.message.text)
+        pdf_report = generate_property_pdf_report(result)
 
-        LOGGER.info(f"Sending price history screenshot for {update.message.text} to {update.effective_user.username}")
+        LOGGER.info(f"Sending property report for {update.message.text} to {update.effective_user.username}")
 
-        # send image file to the user
-        await update.message.reply_photo(photo=open(screenshot, 'rb'))
-
-        # send url to the user
-        await update.message.reply_text(url)
-
-        # delete the screenshot file
-        os.remove(screenshot)
+        # send generated pdf report to user
+        await context.bot.send_document(
+            chat_id=update.effective_chat.id,
+            document=open(pdf_report, 'rb'),
+            filename=f"{result['address']}.pdf",
+            caption=f"Here is the property report for {result['address']}.",
+        )
     except Exception as e:
         LOGGER.error(e)
         await update.message.reply_text("Sorry, I couldn't get the price history for that address. Please try again.")

@@ -4,6 +4,7 @@ FROM joyzoursky/python-chromedriver:3.9-selenium
 # Set the working directory in the container
 WORKDIR /app
 RUN mkdir images/
+RUN mkdir pdfs/
 
 # Copy the requirements.txt file to the container
 COPY requirements.txt .
