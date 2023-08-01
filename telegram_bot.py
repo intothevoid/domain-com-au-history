@@ -45,10 +45,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /help is issued."""
     await update.message.reply_text(
-        "Hi! I am a bot which can get you the price history of an Aussie property if you send me the address."
+        "Hi! I am a bot which can get you the property report of Aussie properties."
     )
     await update.message.reply_text(
-        "Just type in the address and I will send you the price history screenshot (if available)."
+        "Just type in the address and I will send you the property report (if available)."
     )
 
 
@@ -64,6 +64,9 @@ async def process_property_address(
         result["requestor"] = update.effective_user.username
         pdf_report = generate_property_pdf_report(result)
 
+        if not os.path.exists(pdf_report):
+            raise Exception("PDF report not generated or failed to generate.")
+
         LOGGER.info(
             f"Sending property report for {update.message.text} to {update.effective_user.username}"
         )
@@ -78,7 +81,7 @@ async def process_property_address(
     except Exception as e:
         LOGGER.error(e)
         await update.message.reply_text(
-            "Sorry, I couldn't get the price history for that address. Please try again."
+            "Sorry, I couldn't get the price history for that address. Please try again in sometime."
         )
 
 
