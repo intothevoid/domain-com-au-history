@@ -89,8 +89,9 @@ def generate_property_pdf_report(info: dict) -> str:
     address = info["address"]
     url = info["url"]
     image_names = info["screenshots"]
+    requestor = info["requestor"]
 
-    pdf_file = generate_pdf(address, url, image_names)
+    pdf_file = generate_pdf(address, url, image_names, requestor)
 
     return pdf_file
 

@@ -61,9 +61,8 @@ async def process_property_address(
             "Please wait ~30 seconds while I generate a report for you. You will get a notification when ready."
         )
         result = get_property_history_screenshots(update.message.text)
-        pdf_report = generate_property_pdf_report(
-            result, update.effective_user.username
-        )
+        result["requestor"] = update.effective_user.username
+        pdf_report = generate_property_pdf_report(result)
 
         LOGGER.info(
             f"Sending property report for {update.message.text} to {update.effective_user.username}"
