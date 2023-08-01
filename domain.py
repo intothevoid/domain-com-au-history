@@ -21,7 +21,7 @@ def get_property_history_screenshots(property_address: str) -> dict:
         )
 
         # Debug mode for local development
-        if APP_CONFIG["debug"]:
+        if APP_CONFIG["debug_mode"]:
             chrome_options.binary_location = (
                 r"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
             )
