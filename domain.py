@@ -29,7 +29,7 @@ def get_property_history_screenshots(property_address: str) -> dict:
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--disable-notifications")
-        chrome_options.add_extension("extension/info.crx")
+        # chrome_options.add_extension("extension/info.crx")
         driver = webdriver.Chrome(options=chrome_options)
 
         # Track all images which will be captured
