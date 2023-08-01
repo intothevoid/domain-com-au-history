@@ -21,9 +21,9 @@ def get_property_history_screenshots(property_address: str) -> dict:
         )
 
         # Local testing - uncomment if running locally on Mac
-        # chrome_options.binary_location = (
-        #     r"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-        # )
+        chrome_options.binary_location = (
+            r"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+        )
 
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
@@ -54,7 +54,7 @@ def get_property_history_screenshots(property_address: str) -> dict:
         search_box.send_keys(Keys.ENTER)
         time.sleep(generate_sleep_seconds(1, 3))
 
-        # remove popup
+        # remove popup, if it exists
         for popup in APP_CONFIG["popups"]:
             remove_element(driver, popup)
 
@@ -63,7 +63,9 @@ def get_property_history_screenshots(property_address: str) -> dict:
         get_element_by_selector(
             driver, By.CSS_SELECTOR, APP_CONFIG["prop_image"], image_file
         )
-        update_screenshot_list(screenshot_list, img_idx, image_file)
+        screenshot_list, img_idx = update_screenshot_list(
+            screenshot_list, img_idx, image_file
+        )
 
         for image_div in APP_CONFIG["image_divs"]:
             div_element = driver.find_element(By.CSS_SELECTOR, image_div)
@@ -71,7 +73,9 @@ def get_property_history_screenshots(property_address: str) -> dict:
             # Capture the screenshot of the div element containing the price history
             image_file = f"images/{prop_hash}_{img_idx}.png"
             get_element_by_selector(driver, By.CSS_SELECTOR, image_div, image_file)
-            update_screenshot_list(screenshot_list, img_idx, image_file)
+            screenshot_list, img_idx = update_screenshot_list(
+                screenshot_list, img_idx, image_file
+            )
             time.sleep(1)
 
         # get current url
@@ -98,8 +102,10 @@ def get_property_history_screenshots(property_address: str) -> dict:
 
 
 def update_screenshot_list(screenshot_list, img_idx, image_file):
+    LOGGER.debug("Adding image file: " + image_file)
     screenshot_list.append(image_file)
     img_idx += 1
+    return screenshot_list, img_idx
 
 
 def get_element_by_selector(driver, selector_type, selector, element_image_path):
