@@ -22,7 +22,14 @@ if __version_info__ < (20, 0, 0, "alpha", 1):
         f"visit https://docs.python-telegram-bot.org/en/v{TG_VER}/examples.html"
     )
 from telegram import ForceReply, Update
-from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    ContextTypes,
+    MessageHandler,
+    filters,
+)
+
 
 # Define a few command handlers. These usually take the two arguments update and
 # context.
@@ -34,31 +41,47 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         reply_markup=ForceReply(selective=True),
     )
 
+
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /help is issued."""
-    await update.message.reply_text("Hi! I am a bot which can get you the price history of an Aussie property if you send me the address.")
-    await update.message.reply_text("Just type in the address and I will send you the price history screenshot (if available).")
+    await update.message.reply_text(
+        "Hi! I am a bot which can get you the price history of an Aussie property if you send me the address."
+    )
+    await update.message.reply_text(
+        "Just type in the address and I will send you the price history screenshot (if available)."
+    )
 
 
-async def process_property_address(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def process_property_address(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
     """Get the property address and send the price history screenshot."""
     try:
-        await update.message.reply_text("Please wait ~30 seconds while I generate a report for you. You will get a notification when ready.")
+        await update.message.reply_text(
+            "Please wait ~30 seconds while I generate a report for you. You will get a notification when ready."
+        )
         result = get_property_history_screenshots(update.message.text)
-        pdf_report = generate_property_pdf_report(result)
+        pdf_report = generate_property_pdf_report(
+            result, update.effective_user.username
+        )
 
-        LOGGER.info(f"Sending property report for {update.message.text} to {update.effective_user.username}")
+        LOGGER.info(
+            f"Sending property report for {update.message.text} to {update.effective_user.username}"
+        )
 
         # send generated pdf report to user
         await context.bot.send_document(
             chat_id=update.effective_chat.id,
-            document=open(pdf_report, 'rb'),
+            document=open(pdf_report, "rb"),
             filename=f"{result['address']}.pdf",
             caption=f"Here is the property report for {result['address']}.",
         )
     except Exception as e:
         LOGGER.error(e)
-        await update.message.reply_text("Sorry, I couldn't get the price history for that address. Please try again.")
+        await update.message.reply_text(
+            "Sorry, I couldn't get the price history for that address. Please try again."
+        )
+
 
 def start_telegram_bot(bot_token: str) -> None:
     """Start the bot."""
@@ -70,11 +93,13 @@ def start_telegram_bot(bot_token: str) -> None:
     application.add_handler(CommandHandler("help", help_command))
 
     # on non command i.e message - echo the message on Telegram
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, process_property_address))
+    application.add_handler(
+        MessageHandler(filters.TEXT & ~filters.COMMAND, process_property_address)
+    )
 
     # Run the bot until the user presses Ctrl-C
     application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
-if __name__ == '__main__':
-    start_telegram_bot('bot_token')
+if __name__ == "__main__":
+    start_telegram_bot("bot_token")

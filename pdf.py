@@ -3,7 +3,9 @@ from util import generate_hash
 from fpdf import FPDF
 
 
-def generate_pdf(property_address: str, property_url: str, image_names: list):
+def generate_pdf(
+    property_address: str, property_url: str, image_names: list, requestor: str = "N/A"
+):
     """function to generate a pdf file from address and url of the property"""
     pdf_file = f"pdfs/{generate_hash(property_address)}.pdf"
 
@@ -33,6 +35,7 @@ def generate_pdf(property_address: str, property_url: str, image_names: list):
     # address
     pdf.cell(200, 10, txt="Address: " + property_address, ln=1, align="L")
     pdf.cell(200, 10, txt="Domain URL: " + property_url, ln=1, align="L")
+    pdf.cell(200, 10, txt="Requested By: " + requestor, ln=1, align="L")
 
     # add a line break
     pdf.ln(10)

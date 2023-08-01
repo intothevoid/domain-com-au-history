@@ -27,7 +27,6 @@ def get_property_history_screenshots(property_address: str) -> dict:
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-notifications")
-    chrome_options.add_argument("--enable-popup-blocking")
     driver = webdriver.Chrome(options=chrome_options)
 
     # open the domain.com.au property profile page
