@@ -2,9 +2,11 @@ domain_profile_url: https://www.domain.com.au/property-profile
 chrome_path: /opt/google/chrome/chrome
 telegram_token: 1234567890:ABCDEF
 prop_image: .css-jnhjnd > picture:nth-child(1) > img:nth-child(4)
-image_divs: 
- - .css-f77732 > div:nth-child(1)
- - .css-10izwvm
- - .css-ubxrdl
- - div.css-1kjxz6z:nth-child(2) > div:nth-child(1)
- - div.css-1kjxz6z:nth-child(3) > div:nth-child(1)
+popups:
+  - html body div#__next div div div div.css-1a5nwms div.css-177de2j div.css-y0pdsh
+image_divs:
+  - .css-f77732 > div:nth-child(1)
+  - .css-10izwvm
+  - .css-ubxrdl
+  - div.css-1kjxz6z:nth-child(2) > div:nth-child(1)
+  - div.css-1kjxz6z:nth-child(3) > div:nth-child(1)

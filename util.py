@@ -1,5 +1,8 @@
 import random
 import hashlib
+
+from selenium.webdriver.common.by import By
+
 from logger import LOGGER
 
 # function which generates a hash from a string
@@ -27,3 +30,12 @@ def cleanup():
     files = glob.glob('pdfs/*')
     for f in files:
         os.remove(f)
+
+def remove_element(driver, selector: str):
+    """removes an element from the page
+    """
+    element = driver.find_element(By.CSS_SELECTOR, selector)
+    driver.execute_script("""
+        var element = arguments[0];
+        element.parentNode.removeChild(element);
+        """, element)
