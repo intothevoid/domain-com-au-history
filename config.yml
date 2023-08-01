@@ -1,3 +1,4 @@
+debug_mode: false
 domain_profile_url: https://www.domain.com.au/property-profile
 chrome_path: /opt/google/chrome/chrome
 telegram_token: 1234567890:ABCDEF

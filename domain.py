@@ -20,10 +20,11 @@ def get_property_history_screenshots(property_address: str) -> dict:
             APP_CONFIG["chrome_path"] or "/opt/google/chrome/chrome"
         )
 
-        # Local testing - uncomment if running locally on Mac
-        chrome_options.binary_location = (
-            r"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-        )
+        # Debug mode for local development
+        if APP_CONFIG["debug"]:
+            chrome_options.binary_location = (
+                r"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+            )
 
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
