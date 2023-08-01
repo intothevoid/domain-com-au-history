@@ -1,3 +1,4 @@
+import os
 import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -62,15 +63,29 @@ def get_property_history_screenshots(property_address: str) -> dict:
         # property screenshot
         image_file = f"images/{prop_hash}_{img_idx}.png"
         get_element_by_selector(
-            driver, By.CSS_SELECTOR, APP_CONFIG["prop_image"], image_file
+            driver,
+            By.CSS_SELECTOR,
+            APP_CONFIG["prop_image"],
+            image_file,
+        )
+        screenshot_list, img_idx = update_screenshot_list(
+            screenshot_list, img_idx, image_file
+        )
+
+        # history screenshot
+        image_file = f"images/{prop_hash}_{img_idx}.png"
+        get_element_by_selector(
+            driver,
+            By.XPATH,
+            APP_CONFIG["history_image"],
+            image_file,
+            levels=2,
         )
         screenshot_list, img_idx = update_screenshot_list(
             screenshot_list, img_idx, image_file
         )
 
         for image_div in APP_CONFIG["image_divs"]:
-            div_element = driver.find_element(By.CSS_SELECTOR, image_div)
-
             # Capture the screenshot of the div element containing the price history
             image_file = f"images/{prop_hash}_{img_idx}.png"
             get_element_by_selector(driver, By.CSS_SELECTOR, image_div, image_file)
@@ -104,14 +119,29 @@ def get_property_history_screenshots(property_address: str) -> dict:
 
 def update_screenshot_list(screenshot_list, img_idx, image_file):
     LOGGER.debug("Adding image file: " + image_file)
-    screenshot_list.append(image_file)
-    img_idx += 1
+    # if the image file exists on disk, add it to the list
+    if os.path.exists(image_file):
+        screenshot_list.append(image_file)
+        img_idx += 1
     return screenshot_list, img_idx
 
 
-def get_element_by_selector(driver, selector_type, selector, element_image_path):
+def get_element_by_selector(
+    driver, selector_type, selector, element_image_path, levels=0
+):
     try:
-        element = driver.find_element(selector_type, selector)
+        # no need to go up the DOM tree
+        element = None
+        if levels == 0:
+            element = driver.find_element(selector_type, selector)
+        else:
+            # get child first
+            element = driver.find_element(selector_type, selector)
+
+            # go up the DOM tree by levels
+            for _ in range(levels):
+                element = element.find_element(selector_type, "..")
+
         element.screenshot(element_image_path)
     except Exception as e:
         LOGGER.error(e)

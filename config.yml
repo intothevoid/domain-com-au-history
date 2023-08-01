@@ -2,11 +2,10 @@ debug_mode: false
 domain_profile_url: https://www.domain.com.au/property-profile
 chrome_path: /opt/google/chrome/chrome
 telegram_token: 1234567890:ABCDEF
-prop_image: "#__next > div > div:nth-child(2) > div:nth-child(1) > div > div.css-177de2j"
+prop_image: div[data-testid="domain-propertyid-details"]
+history_image: //*[contains(text(), 'Property history')]
 popups:
   - html body div#__next div div div div.css-1a5nwms div.css-177de2j div.css-y0pdsh
 image_divs:
-  - "#__next > div > div:nth-child(2) > div:nth-child(1) > div > div.css-1jisa5y > section > div:nth-child(1)"
-  - "#__next > div > div:nth-child(2) > div:nth-child(1) > div > div.css-1jisa5y > section > div.css-9150dj > div.css-1ws3aoc"
-  - "#__next > div > div:nth-child(2) > div:nth-child(4) > div > div"
+  - div[data-testid="estimate-card"]
   - "#similar-properties"
