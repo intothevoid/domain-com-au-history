@@ -35,7 +35,7 @@ def generate_pdf(
     # address
     pdf.cell(200, 10, txt="Address: " + property_address, ln=1, align="L")
     pdf.cell(200, 10, txt="Domain URL: " + property_url, ln=1, align="L")
-    pdf.cell(200, 10, txt="Requested By: " + requestor, ln=1, align="L")
+    pdf.cell(200, 10, txt="Requested By: " + str(requestor), ln=1, align="L")
 
     # add a line break
     pdf.ln(10)

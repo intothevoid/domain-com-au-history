@@ -61,14 +61,14 @@ async def process_property_address(
             "Please wait ~30 seconds while I generate a report for you. You will get a notification when ready."
         )
         result = get_property_history_screenshots(update.message.text)
-        result["requestor"] = update.effective_user.username
+        result["requestor"] = update.message.chat_id
         pdf_report = generate_property_pdf_report(result)
 
         if not os.path.exists(pdf_report):
             raise Exception("PDF report not generated or failed to generate.")
 
         LOGGER.info(
-            f"Sending property report for {update.message.text} to {update.effective_user.username}"
+            f"Sending property report for {update.message.text} to {update.message.chat_id}"
         )
 
         # send generated pdf report to user
